@@ -23,10 +23,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 10px;
+      padding: 20px 12px;
       overflow-x: hidden;
       transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
     }
 
     body.is-opened {
@@ -38,7 +37,7 @@
     .book-wrapper {
       width: 100%;
       max-width: 650px;
-      min-height: 520px;
+      min-height: 540px;
       position: relative;
       perspective: 1800px;
       -webkit-perspective: 1800px;
@@ -53,9 +52,9 @@
       width: 100%;
       height: 100%;
       border-radius: 24px;
-      padding: 30px 25px;
+      padding: 28px 22px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-      overflow: hidden; /* CEGAH TEKS BOCOR KELUAR BUKU */
+      overflow: hidden;
       
       transform-origin: left center;
       -webkit-transform-origin: left center;
@@ -64,7 +63,7 @@
       -webkit-backface-visibility: hidden;
     }
 
-    /* Lipatan Buku di Sebelah Kiri */
+    /* Lipatan Buku Kiri */
     .book-page::before {
       content: '';
       position: absolute;
@@ -167,12 +166,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .page-header h2 {
       font-family: 'Cinzel', serif;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       color: #27272a;
     }
 
@@ -185,7 +184,7 @@
       background: transparent;
       color: #71717a;
       border: 1px solid #d4d4d8;
-      padding: 6px 14px;
+      padding: 5px 13px;
       border-radius: 50px;
       font-size: 0.78rem;
       font-weight: 600;
@@ -206,7 +205,7 @@
       border-radius: 14px;
       overflow: hidden;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .video-landscape video {
@@ -215,11 +214,41 @@
       object-fit: cover;
     }
 
-    /* SLIDE 3 & 4: PORTRAIT LAYOUT GRID (Kiri Video, Kanan Teks) */
+    /* BINGKAI POLAROID DI DALAM BUKU */
+    .inbook-polaroid {
+      background: #ffffff;
+      padding: 6px 6px 16px 6px;
+      border-radius: 8px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .inbook-polaroid img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #f4f4f5;
+    }
+
+    /* Layout khusus Polaroid di Chapter I (2 Foto Mengapit Teks) */
+    .ch1-bottom-layout {
+      display: grid;
+      grid-template-columns: 85px 1fr 85px;
+      gap: 10px;
+      align-items: center;
+      margin-top: 5px;
+    }
+
+    .pol-left { transform: rotate(-5deg); }
+    .pol-right { transform: rotate(5deg); }
+
+    /* SLIDE 3 & 4: PORTRAIT LAYOUT GRID (Kiri Video, Kanan Teks + 1 Foto) */
     .portrait-grid {
       display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 16px;
+      grid-template-columns: 140px 1fr;
+      gap: 14px;
       align-items: center;
       flex-grow: 1;
     }
@@ -227,7 +256,7 @@
     .video-portrait {
       width: 100%;
       aspect-ratio: 9 / 16;
-      max-height: 320px;
+      max-height: 280px;
       background: #000;
       border-radius: 14px;
       overflow: hidden;
@@ -238,6 +267,18 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .ch-right-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ch-right-content .inbook-polaroid {
+      width: 80px;
+      transform: rotate(3deg);
     }
 
     /* SLIDE 5: FULL TEXT CLOSING BOX */
@@ -268,115 +309,59 @@
     .message-box.center { text-align: center; }
 
     .message-text {
-      font-size: 0.88rem;
-      line-height: 1.55;
+      font-size: 0.82rem;
+      line-height: 1.5;
       color: #44403c;
     }
 
     .handwritten-sign {
       font-family: 'Sacramento', cursive;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       color: #1c1917;
-      margin-top: 8px;
+      margin-top: 4px;
     }
 
-    /* BINGKAI POLAROID DI LUAR BUKU */
-    .polaroid-gallery {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0;
-      transition: opacity 1s ease 0.5s;
-    }
-
-    body.is-opened .polaroid-gallery {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .polaroid-item {
-      position: absolute;
-      background: #ffffff;
-      padding: 6px 6px 20px 6px;
-      border-radius: 6px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-      width: 110px;
-      transition: all 0.4s ease;
-      cursor: pointer;
-    }
-
-    .polaroid-item img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      border-radius: 4px;
-      background: #f4f4f5;
-    }
-
-    .polaroid-item:hover {
-      transform: scale(1.15) rotate(0deg) !important;
-      z-index: 30;
-    }
-
-    /* Posisi Polaroid Melayang */
-    .pol-1 { top: 2%; left: -35px; transform: rotate(-8deg); }
-    .pol-2 { top: 4%; right: -35px; transform: rotate(7deg); }
-    .pol-3 { bottom: 2%; left: -30px; transform: rotate(6deg); }
-    .pol-4 { bottom: 4%; right: -30px; transform: rotate(-9deg); }
-
-    /* RESPONSIVE PERBAIKAN KHUSUS LAYAR HP (MOBILE) */
+    /* RESPONSIVE KHUSUS HP (MOBILE) */
     @media (max-width: 600px) {
       .book-wrapper {
-        min-height: 540px;
+        min-height: 520px;
         height: auto;
       }
 
       .book-page {
-        padding: 22px 16px;
+        padding: 20px 14px;
       }
 
       .cover-title {
-        font-size: 1.9rem;
+        font-size: 1.85rem;
       }
 
-      /* Chapter II & III di HP: Video Kiri (110px) & Teks Kanan Bersisian */
+      .ch1-bottom-layout {
+        grid-template-columns: 70px 1fr 70px;
+        gap: 6px;
+      }
+
       .portrait-grid {
-        grid-template-columns: 110px 1fr;
-        gap: 12px;
+        grid-template-columns: 115px 1fr;
+        gap: 10px;
       }
 
       .video-portrait {
-        max-height: 220px;
+        max-height: 230px;
       }
 
       .message-text {
-        font-size: 0.8rem;
-        line-height: 1.45;
+        font-size: 0.78rem;
+        line-height: 1.4;
       }
 
       .handwritten-sign {
         font-size: 1.3rem;
-        margin-top: 4px;
       }
 
-      /* Polaroid Dipepetkan Agar Kelihatan Pas di Layar HP */
-      .polaroid-gallery {
-        display: block;
+      .ch-right-content .inbook-polaroid {
+        width: 70px;
       }
-
-      .polaroid-item {
-        width: 80px;
-        padding: 4px 4px 14px 4px;
-      }
-
-      .pol-1 { top: -25px; left: 10px; transform: rotate(-6deg); }
-      .pol-2 { top: -25px; right: 10px; transform: rotate(6deg); }
-      .pol-3 { bottom: -20px; left: 15px; transform: rotate(5deg); }
-      .pol-4 { bottom: -20px; right: 15px; transform: rotate(-6deg); }
     }
   </style>
 </head>
@@ -386,14 +371,6 @@
   <audio id="bg-music" loop>
     <source src="music.mp3" type="audio/mpeg">
   </audio>
-
-  <!-- POLAROID GALLERY DI LUAR BUKU -->
-  <div class="polaroid-gallery">
-    <div class="polaroid-item pol-1"><img src="img/foto1.jpg" alt="Memory Photo 1"></div>
-    <div class="polaroid-item pol-2"><img src="img/foto2.jpg" alt="Memory Photo 2"></div>
-    <div class="polaroid-item pol-3"><img src="img/foto3.jpg" alt="Memory Photo 3"></div>
-    <div class="polaroid-item pol-4"><img src="img/foto4.jpg" alt="Memory Photo 4"></div>
-  </div>
 
   <!-- CONTAINER BUKU UTAMA -->
   <div class="book-wrapper">
@@ -406,7 +383,7 @@
       <button class="btn-open" onclick="openBook()">Buka Buku ✦</button>
     </div>
 
-    <!-- SLIDE 2: VIDEO LANDSCAPE (CHAPTER I) -->
+    <!-- SLIDE 2: VIDEO LANDSCAPE + 2 FOTO POLAROID (CHAPTER I) -->
     <div class="book-page page-light" id="page-2">
       <div class="page-header">
         <h2>Chapter I 🎥</h2>
@@ -422,13 +399,24 @@
         </video>
       </div>
 
-      <div class="message-box center">
-        <p class="message-text">Selamat ulang tahun ya! Terima kasih sudah selalu menghadirkan senyum dan tawa di setiap hariku. Semoga di usiamu yang baru ini, bahagia dan hal-hal baik selalu menyertaimu. Enjoy your special day! ✨</p>
-        <div class="handwritten-sign">With Love, Rizki</div>
+      <!-- Layout Bawah Chapter I: Foto 1 - Teks Ucapan - Foto 2 -->
+      <div class="ch1-bottom-layout">
+        <div class="inbook-polaroid pol-left">
+          <img src="img/foto1.jpg" alt="Memory 1">
+        </div>
+
+        <div class="message-box center">
+          <p class="message-text">Selamat ulang tahun ya! Terima kasih sudah selalu menghadirkan senyum dan tawa di setiap hariku. Semoga di usiamu yang baru ini, bahagia selalu menyertaimu! ✨</p>
+          <div class="handwritten-sign">With Love, Rizki</div>
+        </div>
+
+        <div class="inbook-polaroid pol-right">
+          <img src="img/foto2.jpg" alt="Memory 2">
+        </div>
       </div>
     </div>
 
-    <!-- SLIDE 3: VIDEO PORTRAIT 1 (CHAPTER II) -->
+    <!-- SLIDE 3: VIDEO PORTRAIT + TEKS & FOTO 3 (CHAPTER II) -->
     <div class="book-page page-light" id="page-3">
       <div class="page-header">
         <h2>Chapter II 🌸</h2>
@@ -444,14 +432,21 @@
             <source src="video2.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="message-box">
-          <p class="message-text">Setiap momen bersamamu selalu terasa hangat dan berarti. Terima kasih sudah menjadi bagian penting dalam perjalanan ini, sehat dan bahagia selalu yaa! 🤍</p>
-          <div class="handwritten-sign">With Love, Rizki</div>
+        
+        <div class="ch-right-content">
+          <div class="message-box">
+            <p class="message-text">Setiap momen bersamamu selalu terasa hangat dan berarti. Terima kasih sudah menjadi bagian penting dalam perjalanan ini, sehat selalu yaa! 🤍</p>
+            <div class="handwritten-sign">With Love, Rizki</div>
+          </div>
+          <!-- Foto Polaroid 3 di Dalam Buku -->
+          <div class="inbook-polaroid">
+            <img src="img/foto3.jpg" alt="Memory 3">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 4: VIDEO PORTRAIT 2 (CHAPTER III) -->
+    <!-- SLIDE 4: VIDEO PORTRAIT + TEKS & FOTO 4 (CHAPTER III) -->
     <div class="book-page page-light" id="page-4">
       <div class="page-header">
         <h2>Chapter III ✨</h2>
@@ -467,9 +462,16 @@
             <source src="video3.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="message-box">
-          <p class="message-text">Semoga semua harapan, impian, dan cita-citamu di tahun ini satu per satu bisa terwujud. Tetap jadi diri sendiri yang selalu ceria dan menginspirasi! 🎂✨</p>
-          <div class="handwritten-sign">With Love, Rizki</div>
+        
+        <div class="ch-right-content">
+          <div class="message-box">
+            <p class="message-text">Semoga semua harapan, impian, dan cita-citamu di tahun ini satu per satu bisa terwujud. Tetap jadi diri sendiri yang selalu ceria! 🎂✨</p>
+            <div class="handwritten-sign">With Love, Rizki</div>
+          </div>
+          <!-- Foto Polaroid 4 di Dalam Buku -->
+          <div class="inbook-polaroid">
+            <img src="img/foto4.jpg" alt="Memory 4">
+          </div>
         </div>
       </div>
     </div>
