@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0d11" id="theme-color-meta">
   <title>Happy Birthday Amie ✨</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600&family=Sacramento&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -15,16 +16,30 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      height: 100%;
+      /* Cegah auto zoom teks di iOS saat rotasi & cegah rubber-band di root */
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     body {
       background-color: #0d0d11;
       color: #e4e4e7;
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
+      min-height: 100dvh; /* viewport dinamis: aman dari address bar HP yang naik-turun */
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px 12px;
+      /* Aman dari notch / home indicator iPhone */
+      padding-top: max(20px, env(safe-area-inset-top));
+      padding-bottom: max(20px, env(safe-area-inset-bottom));
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
       overflow-x: hidden;
+      overscroll-behavior-y: none; /* cegah pull-to-refresh & bounce iOS/Android */
       transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -38,6 +53,7 @@
       width: 100%;
       max-width: 650px;
       min-height: 540px;
+      max-height: 88dvh; /* cegah overflow di layar pendek (mode landscape / HP kecil) */
       position: relative;
       perspective: 1800px;
       -webkit-perspective: 1800px;
@@ -54,14 +70,20 @@
       border-radius: 24px;
       padding: 28px 22px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      
+      overflow-x: hidden;
+      overflow-y: auto; /* kalau konten kepanjangan di layar pendek, bisa discroll internal, bukan kepotong */
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+
       transform-origin: left center;
       -webkit-transform-origin: left center;
       transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.8s ease 0.3s;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
+
+    /* Sembunyikan scrollbar tapi tetap bisa discroll (kalau kepakai) */
+    .book-page::-webkit-scrollbar { width: 0px; background: transparent; }
 
     /* Lipatan Buku Kiri */
     .book-page::before {
@@ -83,6 +105,16 @@
       -webkit-transform: rotateY(-140deg);
       opacity: 0;
       pointer-events: none;
+    }
+
+    /* Hormati preferensi pengguna yang mengurangi motion */
+    @media (prefers-reduced-motion: reduce) {
+      .book-page {
+        transition: opacity 0.4s ease;
+      }
+      .book-page.flipped {
+        transform: none;
+      }
     }
 
     /* SLIDE 1: COVER BUKU DEPAN (GELAP) */
@@ -138,13 +170,19 @@
       background: #ffffff;
       color: #000000;
       border: none;
-      padding: 13px 32px;
+      padding: 15px 34px;
+      min-height: 48px; /* target sentuh nyaman */
       border-radius: 50px;
       font-size: 0.92rem;
       font-weight: 600;
       cursor: pointer;
+      touch-action: manipulation;
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-open:active {
+      transform: scale(0.96);
     }
 
     /* HALAMAN ISI (TERANG) */
@@ -167,32 +205,45 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
+      gap: 8px;
     }
 
     .page-header h2 {
       font-family: 'Cinzel', serif;
       font-size: 1.25rem;
       color: #27272a;
+      white-space: nowrap;
     }
 
     .nav-buttons {
       display: flex;
       gap: 6px;
+      flex-shrink: 0;
     }
 
     .btn-nav {
       background: transparent;
       color: #71717a;
       border: 1px solid #d4d4d8;
-      padding: 5px 13px;
+      padding: 9px 14px;
+      min-height: 38px; /* lebih nyaman ditekan jempol tanpa mengubah proporsi visual terlalu jauh */
       border-radius: 50px;
       font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .btn-nav:hover {
+      background: #18181b;
+      color: #ffffff;
+    }
+
+    .btn-nav:active {
+      transform: scale(0.95);
       background: #18181b;
       color: #ffffff;
     }
@@ -230,6 +281,7 @@
       object-fit: cover;
       border-radius: 4px;
       background: #f4f4f5;
+      display: block;
     }
 
     /* Layout khusus Polaroid di Chapter I (2 Foto Mengapit Teks) */
@@ -357,12 +409,100 @@
         font-size: 1.35rem;
       }
     }
+
+    /* LAYAR SANGAT SEMPIT (iPhone SE, HP kecil ~360px ke bawah) */
+    @media (max-width: 360px) {
+      .book-page {
+        padding: 16px 10px;
+      }
+
+      .cover-title {
+        font-size: 1.55rem;
+      }
+
+      .cover-subtitle {
+        font-size: 0.82rem;
+        margin-bottom: 22px;
+      }
+
+      .book-badge {
+        font-size: 0.65rem;
+        padding: 5px 12px;
+        margin-bottom: 14px;
+      }
+
+      .page-header h2 {
+        font-size: 1.05rem;
+      }
+
+      .btn-nav {
+        padding: 8px 11px;
+        font-size: 0.72rem;
+      }
+
+      .ch1-bottom-layout {
+        grid-template-columns: 58px 1fr 58px;
+        gap: 5px;
+      }
+
+      .ch-top-media {
+        grid-template-columns: 92px 1fr;
+        gap: 8px;
+      }
+
+      .ch-top-media .inbook-polaroid {
+        width: 70px;
+      }
+
+      .video-portrait-small {
+        max-height: 160px;
+      }
+
+      .message-text {
+        font-size: 0.74rem;
+      }
+    }
+
+    /* MODE LANDSCAPE DI HP (tinggi layar terbatas) */
+    @media (max-height: 480px) and (orientation: landscape) {
+      body {
+        align-items: flex-start;
+        padding-top: max(14px, env(safe-area-inset-top));
+      }
+
+      .book-wrapper {
+        min-height: 0;
+        max-height: none;
+      }
+
+      .book-page {
+        padding: 14px 18px;
+        height: auto;
+        min-height: 100%;
+      }
+
+      .video-landscape {
+        max-height: 38dvh;
+      }
+
+      .ch-top-media {
+        grid-template-columns: 100px 1fr;
+      }
+
+      .video-portrait-small {
+        max-height: 150px;
+      }
+
+      .full-text-box {
+        padding: 6px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- Audio Background Music -->
-  <audio id="bg-music" loop>
+  <audio id="bg-music" loop playsinline>
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
@@ -388,7 +528,7 @@
       </div>
 
       <div class="video-landscape">
-        <video class="hbd-video" id="vid-2" loop muted playsinline>
+        <video class="hbd-video" id="vid-2" loop muted playsinline webkit-playsinline>
           <source src="video.mp4" type="video/mp4">
         </video>
       </div>
@@ -396,7 +536,7 @@
       <!-- Layout Bawah Chapter I -->
       <div class="ch1-bottom-layout">
         <div class="inbook-polaroid pol-left">
-          <img src="img/foto1.jpg" alt="Memory 1">
+          <img src="img/foto1.jpg" alt="Memory 1" loading="lazy">
         </div>
 
         <div class="message-box center">
@@ -405,7 +545,7 @@
         </div>
 
         <div class="inbook-polaroid pol-right">
-          <img src="img/foto2.jpg" alt="Memory 2">
+          <img src="img/foto2.jpg" alt="Memory 2" loading="lazy">
         </div>
       </div>
     </div>
@@ -423,12 +563,12 @@
       <!-- Atas: Video Kiri & Foto Polaroid Kanan -->
       <div class="ch-top-media">
         <div class="video-portrait-small">
-          <video class="hbd-video" id="vid-3" loop muted playsinline>
+          <video class="hbd-video" id="vid-3" loop muted playsinline webkit-playsinline>
             <source src="video2.mp4" type="video/mp4">
           </video>
         </div>
         <div class="inbook-polaroid">
-          <img src="img/foto3.jpg" alt="Memory 3">
+          <img src="img/foto3.jpg" alt="Memory 3" loading="lazy">
         </div>
       </div>
 
@@ -452,12 +592,12 @@
       <!-- Atas: Video Kiri & Foto Polaroid Kanan -->
       <div class="ch-top-media">
         <div class="video-portrait-small">
-          <video class="hbd-video" id="vid-4" loop muted playsinline>
+          <video class="hbd-video" id="vid-4" loop muted playsinline webkit-playsinline>
             <source src="video3.mp4" type="video/mp4">
           </video>
         </div>
         <div class="inbook-polaroid">
-          <img src="img/foto4.jpg" alt="Memory 4">
+          <img src="img/foto4.jpg" alt="Memory 4" loading="lazy">
         </div>
       </div>
 
@@ -487,8 +627,10 @@
   </div>
 
   <script>
+    const themeMeta = document.getElementById('theme-color-meta');
+
     function openBook() {
-      // Putar Musik Backsound (Slide 2 s/d 5)
+      // Putar Musik Backsound (Slide 2 s/d 5) - dipicu oleh tap user, jadi aman untuk kebijakan autoplay iOS/Android
       const audio = document.getElementById('bg-music');
       if (audio) {
         audio.currentTime = 0;
@@ -505,6 +647,7 @@
 
       document.getElementById('page-1').classList.add('flipped');
       document.body.classList.add('is-opened');
+      if (themeMeta) themeMeta.setAttribute('content', '#f4efe6');
 
       playVideoOfSlide(2);
     }
@@ -517,21 +660,24 @@
       if (audio) {
         audio.pause();
       }
-      
+
       document.querySelectorAll('.book-page').forEach(page => {
         page.classList.remove('flipped');
       });
 
       document.body.classList.remove('is-opened');
+      if (themeMeta) themeMeta.setAttribute('content', '#0d0d11');
     }
 
     function flipToPage(pageNum) {
       const pageToFlip = document.getElementById(`page-${pageNum}`);
       if (pageToFlip) {
         pageToFlip.classList.add('flipped');
-        
+        pageToFlip.scrollTop = 0;
+
         pauseAllVideos();
         playVideoOfSlide(pageNum + 1);
+        scrollNextPageToTop(pageNum + 1);
       }
     }
 
@@ -539,10 +685,16 @@
       const pageToUnflip = document.getElementById(`page-${pageNum}`);
       if (pageToUnflip) {
         pageToUnflip.classList.remove('flipped');
-        
+
         pauseAllVideos();
         playVideoOfSlide(pageNum);
+        scrollNextPageToTop(pageNum);
       }
+    }
+
+    function scrollNextPageToTop(pageNum) {
+      const page = document.getElementById(`page-${pageNum}`);
+      if (page) page.scrollTop = 0;
     }
 
     function playVideoOfSlide(slideNum) {
