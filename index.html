@@ -107,6 +107,12 @@
       pointer-events: none;
     }
 
+    /* Dipakai sesaat saat Restart: halaman selain cover di-snap instan (tanpa transisi)
+       supaya tidak ikut ber-flip bareng cover dan bikin tampilan numpuk/glitch */
+    .book-page.no-anim {
+      transition: none !important;
+    }
+
     /* Hormati preferensi pengguna yang mengurangi motion */
     @media (prefers-reduced-motion: reduce) {
       .book-page {
@@ -191,7 +197,10 @@
       border: 1px solid rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      /* dulu pakai justify-content: space-between, tapi itu yang bikin ruang kosong
+         besar di antara media & teks. Sekarang elemen media yang punya flex-grow
+         (lihat .ch-top-media / .full-text-box) yang mengisi sisa ruang. */
+      justify-content: flex-start;
     }
 
     #page-2 { z-index: 9; }
@@ -296,24 +305,24 @@
     .pol-left { transform: rotate(-5deg); }
     .pol-right { transform: rotate(5deg); }
 
-    /* REVISI SLIDE 3 & 4: ATAS (VIDEO KIRI + FOTO KANAN), BAWAH (TEKS) */
+    /* REVISI SLIDE 3 & 4: VIDEO DIPERBESAR (KIRI-ATAS) + 2 FOTO (KANAN), MENGISI SISA RUANG */
     .ch-top-media {
+      flex: 1 1 auto;   /* mengisi semua ruang kosong yang tadinya kosong */
+      min-height: 0;
       display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 14px;
-      align-items: center;
-      justify-items: center;
-      margin-bottom: 12px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .video-portrait-small {
       width: 100%;
-      aspect-ratio: 9 / 16;
-      max-height: 220px;
+      height: 100%;     /* video ikut memenuhi tinggi area yang tersedia */
+      min-height: 170px;
       background: #000;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
     .video-portrait-small video {
@@ -322,9 +331,32 @@
       object-fit: cover;
     }
 
-    .ch-top-media .inbook-polaroid {
-      width: 105px;
-      transform: rotate(3deg);
+    /* 2 foto ditumpuk vertikal di sisi kanan video, sama-sama mengisi tinggi */
+    .photo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+      min-height: 170px;
+    }
+
+    .photo-stack .inbook-polaroid {
+      flex: 1 1 0;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      transform: rotate(2.5deg);
+    }
+
+    .photo-stack .inbook-polaroid:nth-child(2) {
+      transform: rotate(-2.5deg);
+    }
+
+    .photo-stack .inbook-polaroid img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+      object-fit: cover;
     }
 
     /* SLIDE 5: FULL TEXT CLOSING BOX */
@@ -387,17 +419,25 @@
         gap: 6px;
       }
 
+      /* Di layar sempit, video jadi baris atas (lebar penuh), 2 foto jadi baris bawah bersisian */
       .ch-top-media {
-        grid-template-columns: 110px 1fr;
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(150px, 1.3fr) minmax(90px, 0.8fr);
         gap: 10px;
       }
 
       .video-portrait-small {
-        max-height: 190px;
+        min-height: 150px;
       }
 
-      .ch-top-media .inbook-polaroid {
-        width: 85px;
+      .photo-stack {
+        flex-direction: row;
+        min-height: 90px;
+      }
+
+      .photo-stack .inbook-polaroid,
+      .photo-stack .inbook-polaroid:nth-child(2) {
+        transform: none;
       }
 
       .message-text {
@@ -446,16 +486,17 @@
       }
 
       .ch-top-media {
-        grid-template-columns: 92px 1fr;
+        grid-template-rows: minmax(130px, 1.2fr) minmax(75px, 0.8fr);
         gap: 8px;
       }
 
-      .ch-top-media .inbook-polaroid {
-        width: 70px;
+      .video-portrait-small {
+        min-height: 130px;
       }
 
-      .video-portrait-small {
-        max-height: 160px;
+      .photo-stack {
+        min-height: 75px;
+        gap: 8px;
       }
 
       .message-text {
@@ -486,11 +527,17 @@
       }
 
       .ch-top-media {
-        grid-template-columns: 100px 1fr;
+        grid-template-columns: 1.15fr 0.85fr;
+        grid-template-rows: none;
       }
 
       .video-portrait-small {
-        max-height: 150px;
+        min-height: 0;
+      }
+
+      .photo-stack {
+        flex-direction: column;
+        min-height: 0;
       }
 
       .full-text-box {
@@ -560,15 +607,20 @@
         </div>
       </div>
 
-      <!-- Atas: Video Kiri & Foto Polaroid Kanan -->
+      <!-- Atas: Video Kiri (Diperbesar) & 2 Foto Polaroid Kanan -->
       <div class="ch-top-media">
         <div class="video-portrait-small">
           <video class="hbd-video" id="vid-3" loop muted playsinline webkit-playsinline>
             <source src="video2.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="inbook-polaroid">
-          <img src="img/foto3.jpg" alt="Memory 3" loading="lazy">
+        <div class="photo-stack">
+          <div class="inbook-polaroid">
+            <img src="img/foto3.jpg" alt="Memory 3" loading="lazy">
+          </div>
+          <div class="inbook-polaroid">
+            <img src="img/foto3b.jpg" alt="Memory 3b" loading="lazy">
+          </div>
         </div>
       </div>
 
@@ -589,15 +641,20 @@
         </div>
       </div>
 
-      <!-- Atas: Video Kiri & Foto Polaroid Kanan -->
+      <!-- Atas: Video Kiri (Diperbesar) & 2 Foto Polaroid Kanan -->
       <div class="ch-top-media">
         <div class="video-portrait-small">
           <video class="hbd-video" id="vid-4" loop muted playsinline webkit-playsinline>
             <source src="video3.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="inbook-polaroid">
-          <img src="img/foto4.jpg" alt="Memory 4" loading="lazy">
+        <div class="photo-stack">
+          <div class="inbook-polaroid">
+            <img src="img/foto4.jpg" alt="Memory 4" loading="lazy">
+          </div>
+          <div class="inbook-polaroid">
+            <img src="img/foto4b.jpg" alt="Memory 4b" loading="lazy">
+          </div>
         </div>
       </div>
 
@@ -661,9 +718,24 @@
         audio.pause();
       }
 
-      document.querySelectorAll('.book-page').forEach(page => {
+      // Halaman isi (2-5) di-snap instan ke posisi awal TANPA animasi, supaya tidak
+      // ikut ber-flip bersamaan dengan cover dan terlihat numpuk/glitch sesaat.
+      // Cover (page-1) tetap dianimasikan normal agar terasa seperti "buku menutup".
+      const innerPages = document.querySelectorAll('.book-page:not(#page-1)');
+      innerPages.forEach(page => {
+        page.classList.add('no-anim');
         page.classList.remove('flipped');
+        page.scrollTop = 0;
       });
+
+      // Paksa reflow supaya class 'no-anim' benar-benar diterapkan dulu sebelum dilepas
+      void document.getElementById('page-1').offsetHeight;
+
+      innerPages.forEach(page => page.classList.remove('no-anim'));
+
+      // Cover dianimasikan kembali ke posisi normal
+      document.getElementById('page-1').classList.remove('flipped');
+      document.getElementById('page-1').scrollTop = 0;
 
       document.body.classList.remove('is-opened');
       if (themeMeta) themeMeta.setAttribute('content', '#0d0d11');
