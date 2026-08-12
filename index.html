@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0d0d11" id="theme-color-meta">
-  <title>Happy Birthday Amiii ✨</title>
+  <title>Happy Birthday Amie ✨</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600&family=Sacramento&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -309,6 +309,83 @@
     #page-3 { z-index: 8; }
     #page-4 { z-index: 7; }
     #page-5 { z-index: 6; }
+    #page-6 { z-index: 5; }
+    #page-7 { z-index: 4; }
+
+    /* Link kecil "easter egg" di penutup Chapter IV menuju halaman rahasia */
+    .secret-teaser {
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      margin-top: 26px;
+      padding: 8px 10px;
+      cursor: pointer;
+      touch-action: manipulation;
+      opacity: 0.75;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .secret-teaser:hover,
+    .secret-teaser:active {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    /* SLIDE 6: HALAMAN "SECRET GIFT" - kosong, hanya judul & tombol pembuka */
+    .secret-box {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 15px;
+    }
+
+    .secret-icon {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+      opacity: 0.85;
+    }
+
+    .secret-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 4vw + 0.6rem, 2.1rem);
+      color: #27272a;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .secret-subtitle {
+      color: #6b6b6b;
+      font-size: 0.85rem;
+      max-width: 320px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* Varian tombol gelap-emas untuk dipakai di atas halaman terang (page-light) */
+    .btn-secret {
+      background: linear-gradient(135deg, #211a13, #322619);
+      color: #f0e6d2;
+      border: 1px solid var(--gold-soft);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.18);
+      animation: pulseGlowDark 2.6s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlowDark {
+      0%, 100% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.18), 0 0 0 0 rgba(201, 169, 97, 0); }
+      50%      { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22), 0 0 0 9px rgba(201, 169, 97, 0.15); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn-secret { animation: none; }
+    }
+    #page-6 { z-index: 5; }
+    #page-7 { z-index: 4; }
 
     /* Header Navigasi */
     .page-header {
@@ -533,6 +610,82 @@
       margin: 0 auto 8px;
     }
 
+    /* SLIDE 6: TEASER "SECRET GIFT" */
+    .secret-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #a9784f;
+      border: 1px solid var(--gold-soft);
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 18px;
+    }
+
+    .secret-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
+      color: #1c1917;
+      margin-bottom: 14px;
+      text-shadow: 0 0 22px var(--gold-soft);
+    }
+
+    .secret-subtitle {
+      font-size: 0.88rem;
+      color: #57534e;
+      max-width: 360px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .btn-secret {
+      background: #18181b;
+      color: #ffffff;
+      border: none;
+      padding: 15px 34px;
+      min-height: 48px;
+      border-radius: 50px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      animation: pulseGlowDark 2.6s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlowDark {
+      0%, 100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(201, 169, 97, 0); }
+      50%      { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 0 9px rgba(201, 169, 97, 0.15); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn-secret { animation: none; }
+    }
+
+    .btn-secret:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-secret:active {
+      transform: scale(0.96);
+    }
+
+    /* SLIDE 7: 1 FOTO TUNGGAL DI SAMPING VIDEO (memenuhi tinggi, sama seperti photo-stack) */
+    .photo-single {
+      height: 100%;
+      width: 100%;
+      display: flex;
+    }
+
+    .photo-single img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+      object-fit: cover;
+    }
+
     /* RESPONSIVE KHUSUS HP (MOBILE) */
     @media (max-width: 600px) {
       .book-wrapper {
@@ -704,8 +857,8 @@
 
     <!-- SLIDE 1: COVER BUKU DEPAN (GELAP) -->
     <div class="book-page" id="page-1">
-      <div class="book-badge">Volume I • Special Moment</div>
-      <h1 class="cover-title">Happy Birthday,<br><span>Amiii</span></h1>
+      <div class="book-badge">Volume I • Special Edition</div>
+      <h1 class="cover-title">Happy Birthday,<br><span>Amie</span></h1>
       <p class="cover-subtitle">Buka buku ini untuk melihat kenangan indah yang tersimpan.</p>
       <button class="btn-open" onclick="openBook()">Buka Buku ✦</button>
     </div>
@@ -736,8 +889,8 @@
         </div>
 
         <div class="message-box center">
-          <p class="message-text">Liat deh abang pernah photo booth berdua sama perempuan secantik ini, senyumannya itu loh buat abang tenang. Kok bisa yah perempuan seindah ini hadir di hidup abang? ✨</p>
-          <div class="handwritten-sign">Beautiful</div>
+          <p class="message-text">Selamat ulang tahun ya! Terima kasih sudah selalu menghadirkan senyum dan tawa di setiap hariku. Semoga di usiamu yang baru ini, bahagia selalu menyertaimu! ✨</p>
+          <div class="handwritten-sign">With Love, Rizki</div>
         </div>
 
         <div class="inbook-polaroid pol-right">
@@ -778,8 +931,8 @@
 
       <!-- Bawah: Teks Ucapan Lengkap Melintang -->
       <div class="message-box">
-        <p class="message-text">Lagi lagii, cantik banget sih sambil pegang bunga. tiap liat keindahan ami abang bawaannya senyum senyum sendiri 🤍</p>
-        <div class="handwritten-sign">Gorgeous</div>
+        <p class="message-text">Setiap momen bersamamu selalu terasa hangat dan berarti. Terima kasih sudah menjadi bagian penting dalam perjalanan ini, sehat selalu yaa! 🤍</p>
+        <div class="handwritten-sign">With Love, Rizki</div>
       </div>
     </div>
 
@@ -815,8 +968,8 @@
 
       <!-- Bawah: Teks Ucapan Lengkap Melintang -->
       <div class="message-box">
-        <p class="message-text">Sehat selalu cantikku, lancar selalu rezekinya. Semoga semua harapan, impian, dan cita-citamu di tahun ini satu per satu bisa terwujud. 🎂✨</p>
-        <div class="handwritten-sign">Lovely</div>
+        <p class="message-text">Semoga semua harapan, impian, dan cita-citamu di tahun ini satu per satu bisa terwujud. Tetap jadi diri sendiri yang selalu ceria dan menginspirasi! 🎂✨</p>
+        <div class="handwritten-sign">With Love, Rizki</div>
       </div>
     </div>
 
@@ -834,8 +987,55 @@
       </div>
 
       <div class="full-text-box">
-        <p class="message-text">Sekali lagi, Happy Birthday Ami Sayang! Terima kasih sudah membaca buku kecil ini sampai akhir. Semoga hari ini dan hari-hari ke depannya dipenuhi kebahagiaan yang melimpah untuk ami. 💐✨</p>
-        <div class="handwritten-sign">With love, Abang</div>
+        <p class="message-text">Sekali lagi, Happy Birthday! Terima kasih sudah membaca buku kecil ini sampai akhir. Semoga hari ini dan hari-hari ke depannya dipenuhi kebahagiaan yang melimpah untukmu. 💐✨</p>
+        <div class="handwritten-sign">Always Yours, Rizki</div>
+        <button class="secret-teaser" onclick="flipToPage(5)">✦ psst, ada satu kejutan lagi...</button>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: SECRET GIFT (kosong, hanya judul & tombol pembuka) -->
+    <div class="book-page page-light" id="page-6">
+      <div class="page-header">
+        <h2>Bonus 🎁</h2>
+        <div class="nav-buttons">
+          <button class="btn-nav" onclick="unflipPage(5)">❮ Kembali</button>
+        </div>
+      </div>
+
+      <div class="secret-box">
+        <div class="secret-icon">🔒</div>
+        <h3 class="secret-title">Secret Gift</h3>
+        <p class="secret-subtitle">Ada kejutan kecil yang disiapkan khusus untukmu...</p>
+        <button class="btn-open btn-secret" onclick="flipToPage(6)">Buka Hadiah ✦</button>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: ISI HADIAH RAHASIA (1 video + 1 foto + teks) -->
+    <div class="book-page page-light" id="page-7">
+      <div class="page-header">
+        <h2>Secret ✦</h2>
+        <div class="nav-buttons">
+          <button class="btn-nav" onclick="unflipPage(6)">❮ Kembali</button>
+          <button class="btn-nav" onclick="closeBook()">↺ Restart</button>
+        </div>
+      </div>
+
+      <div class="ch-top-media">
+        <div class="video-portrait-small">
+          <video class="hbd-video" id="vid-7" loop muted playsinline webkit-playsinline>
+            <source src="secret-video.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="photo-stack">
+          <div class="inbook-polaroid">
+            <img src="img/secret-foto.jpg" alt="Secret Memory" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="message-box">
+        <p class="message-text">Tulis pesan rahasiamu di sini... (silakan diedit sendiri sesukamu)</p>
+        <div class="handwritten-sign">With Love, Rizki</div>
       </div>
     </div>
 
